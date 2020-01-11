@@ -1,0 +1,17 @@
+{
+  "name": "practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^7.0.0",
+    "should": "^13.2.3"
+  },
+  "scripts": {
+    "test": "mocha --grep"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
