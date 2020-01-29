@@ -3,16 +3,50 @@ var should = require("should");
 function sum() {
   // Convert arguments object to an array
   var args = Array.prototype.slice.call(arguments);
-
-  // Throw error if arguments contain non-finite number values
+  
+  // check for non-numbers
+  // if non-number is detected return error
+  // using the not-operator to avoid saving output to memory
   if (!args.every(Number.isFinite)) {
     throw new TypeError("sum() expects only numbers.");
   }
 
-  // Return the sum of the arguments
-  return args.reduce(function(a, b) {
-    return a + b;
-  }, 0);
+  return args.reduce((a,b) => a + b, 0)
+  
+
+  /** TRY. 1: using for loops to iterate
+    for (let i = 0; i < args.length; i++) 
+    // loop-start: i < args.length
+    {
+      var argsType = (typeof args[i])
+
+      if (argsType != "number") {
+        console.log(argsType, args[i])
+
+        // throw error here:
+        throw new TypeError("sum() expects only numbers.");
+      }
+      
+    }
+    // loop-end: i++
+  */
+
+  /** EX. 1: https://www.w3schools.com/js/js_array_iteration.asp
+    var numbers = [45, 4, 9, 16, 25];
+    var allOver18 = numbers.every(myFunction);
+
+    function myFunction(value, index, array) {
+      return value > 18;
+    } 
+  */
+
+  /** TRY. 2: using EX. 1 Array.every() iteration
+    var arrOut = args.every(Number.isFinite)
+    if (arrOut == false) {
+      throw new TypeError("sum() expects only numbers.");
+    }
+  */
+  
 }
 
 /* [Solution-Number_Type] */
