@@ -2,12 +2,12 @@ var should = require("should");
 
 function findMissing() {
   var nums = Array.prototype.slice.call(arguments)[0];
-  nums.sort(function(a, b){return a-b})
+  // nums.sort(function(a, b){return a-b})
   
   let total = nums.length;
 
   for (let i = nums.length - 1; i >= 0; i--) {
-    console.log(`${total - nums[i] + i} = ${total} - ${nums[i]} + ${i}`);
+    //console.log(`${total - nums[i] + i} = ${total} - ${nums[i]} + ${i}`);
 
     total = total - nums[i] + i;
   }
