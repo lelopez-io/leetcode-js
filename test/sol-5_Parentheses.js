@@ -77,16 +77,16 @@ function isValid(s) {
   * also 0(n) making the entire thing 0(n^2)
 
     function isValid(s) {
-    const originalLength = s.length;
+        const originalLength = s.length;
 
-    for (i = 0; i < originalLength / 2; i++) {
-        s = s.replace("[]", "");
-        s = s.replace("{}", "");
-        s = s.replace("()", "");
+        for (i = 0; i < originalLength / 2; i++) {
+            s = s.replace("[]", "");
+            s = s.replace("{}", "");
+            s = s.replace("()", "");
+        }
+
+        return !s.length;
     }
-
-    return !s.length;
-}
   */
 
 /* [Solution-Number_Type] */
