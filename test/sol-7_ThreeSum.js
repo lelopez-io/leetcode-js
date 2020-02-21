@@ -13,7 +13,10 @@ function threeSumLoop(nums) {
     // three for loops should be O(n^3)
 
     pairs = [];
-    pairNum = 0;
+
+    // console.log("initialized: ", pairs[0]); // value at index 0 is undefined
+    // console.log("uninitialized", pairs[0][0]) // value at index 0 is undefined, to you can't access it's index 0
+
     elements = nums.length;
     nums.sort(function(num_a, num_b) {
         return num_a - num_b;
@@ -26,18 +29,28 @@ function threeSumLoop(nums) {
             num_b = nums[j];
 
             for (k = j + 1; k < elements; k++) {
-                c = nums[k];
+                num_c = nums[k];
 
-                if (!(num_a + num_b + c)) {
-                    // if()
-                    pairs.push([num_a, num_b, c]);
+                // if triplet add to zero
+                if (!(num_a + num_b + num_c)) {
+                    //if triplet wasn't pushed already
+                    if (pairs.length == 0) {
+                        pairs.push([num_a, num_b, num_c]);
+                    }
+                    if (
+                        pairs[pairs.length - 1][0] != num_a ||
+                        pairs[pairs.length - 1][1] != num_b ||
+                        pairs[pairs.length - 1][2] != num_c
+                    ) {
+                        pairs.push([num_a, num_b, num_c]);
+                    }
                 }
             }
         }
     }
 
-    console.log(uniqueArray);
-    return uniqueArray;
+    console.log(pairs);
+    return pairs;
 }
 
 /**
@@ -61,12 +74,47 @@ function threeSumLoop(nums) {
 */
 
 function threeSum(nums) {
+    nums.sort(function(num_a, num_b) {
+        return num_a - num_b;
+    });
+    console.log(nums);
+
     solutionMap = {};
+    complementMap = {};
 
     for (i = 0; i < nums.length - 2; i++) {
         num_a = nums[i];
-        solutionMap[num_a] = {};
+        complementMap[num_a] = {};
+
+        for (j = i + 1; j < nums.length; j++) {
+            num_b = nums[j];
+            console.log(complementMap);
+
+            if (num_b in complementMap[num_a]) {
+                // num_b is actually a num_c we already calculated
+                num_c = num_b;
+                num_b = complementMap[num_a][num_c];
+                // if the solution array is empty or the the previous doesn't match
+                if (
+                    !solutionArray.length ||
+                    solutionArray[solutionArray.length - 1][0] != num_a ||
+                    solutionArray[solutionArray.length - 1][1] != num_b ||
+                    solutionArray[solutionArray.length - 1][2] != num_c
+                ) {
+                    var possibleTriplet = [num_a, num_b, num_c];
+                    console.log(`\t\tpossibleTriplet: ${possibleTriplet}`);
+                    solutionArray.push(possibleTriplet);
+                }
+            } else {
+                // num_b can be saved until we come across num_c
+                num_c = -(num_a + num_b);
+                complementMap[num_a][num_c] = num_b;
+            }
+        }
     }
+
+    console.log(solutionArray);
+    return solutionArray;
 }
 
 /** TRY 2: 
@@ -159,16 +207,29 @@ describe("sol-7_ThreeSums", function() {
             });
 
             // it("should return two different sets", function() {
-            //     threeSumLoop([-1, 2, 0, -1, 1, -4]).should.eql([
-            //         [-1, 0, 1],
-            //         [-1, -1, 2]
-            //     ]);
-            // });
-
-            // it("should return two different sets", function() {
-            //     threeSumLoop([1, 2, 0, -1, -4, 1]).should.eql([
-            //         [-1, 0, 1],
-            //         [-1, -1, 2]
+            //     threeSum([
+            //         -4,
+            //         -2,
+            //         -2,
+            //         -2,
+            //         0,
+            //         1,
+            //         2,
+            //         2,
+            //         2,
+            //         3,
+            //         3,
+            //         4,
+            //         4,
+            //         6,
+            //         6
+            //     ]).should.eql([
+            //         [-4, -2, 6],
+            //         [-4, 0, 4],
+            //         [-4, 1, 3],
+            //         [-4, 2, 2],
+            //         [-2, -2, 4],
+            //         [-2, 0, 2]
             //     ]);
             // });
         });
