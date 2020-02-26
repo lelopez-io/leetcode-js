@@ -9,110 +9,34 @@ var should = require("should");
  * Note: The solution set must not contain duplicate triplets.
  */
 
-function threeSumLoop(nums) {
-    // three for loops should be O(n^3)
-
-    pairs = [];
-
-    // console.log("initialized: ", pairs[0]); // value at index 0 is undefined
-    // console.log("uninitialized", pairs[0][0]) // value at index 0 is undefined, to you can't access it's index 0
-
-    elements = nums.length;
-    nums.sort(function(num_a, num_b) {
-        return num_a - num_b;
-    });
-
-    for (i = 0; i < elements - 2; i++) {
-        num_a = nums[i];
-        //Check for repeating numbers
-        if (i > 0 && num_a == nums[i - 1]) continue;
-        for (j = i + 1; j < elements - 1; j++) {
-            num_b = nums[j];
-
-            if (j > 1 && num_b == nums[j - 1]) continue;
-
-            for (k = j + 1; k < elements; k++) {
-                num_c = nums[k];
-                if (k > 2 && num_c == nums[k - 1]) continue;
-
-                // if triplet add to zero
-                if (!(num_a + num_b + num_c)) {
-                    //if triplet wasn't pushed already
-                    if (pairs.length == 0) {
-                        pairs.push([num_a, num_b, num_c]);
-                    }
-                    if (
-                        pairs[pairs.length - 1][0] != num_a ||
-                        pairs[pairs.length - 1][1] != num_b ||
-                        pairs[pairs.length - 1][2] != num_c
-                    ) {
-                        pairs.push([num_a, num_b, num_c]);
-                    }
-                }
-            }
-        }
-    }
-
-    console.log(pairs);
-    return pairs;
-}
-
-/**
-    [-4, -1, -1, 0, 1, 2]
-
-    num_c = -(num_a + num_b)
-
-    hashmap = {
-        num_a: {
-            num_c: num_b
-        }
-        -1: {
-            2: -1,
-            1: 0,
-        }
-    }
-
-
-    for each num_a calculate num_c using num_b
-    logic:: if (num_c in num_a) we already came across num_b so return the triplet
-*/
-
 function threeSum(nums) {
     nums.sort(function(num_a, num_b) {
         return num_a - num_b;
     });
     if (nums[0] > 0) return []; // if no negatives exist then no need to process
 
+    let solutionArray = [];
+
+    // for every number except the last two we will search two number to complement
     for (i = 0; i < nums.length - 2; i++) {
-        num_a = nums[i];
-        complementMap[num_a] = Object.assign({}, complementMap[num_a]);
-        solutionMap[num_a] = {};
+        // if this is our first number and the number doesn't equal the previous number
+        if (i == 0 || (i > 0 && nums[i] != nums[i - 1])) {
+            let lo = i + 1;
+            let hi = nums.length - 1;
+            let sum = 0 - nums[i];
 
-        for (j = i + 1; j < nums.length; j++) {
-            num_b = nums[j];
-            console.log("complementMap: ", complementMap);
-
-            if (num_b in complementMap[num_a]) {
-                // num_b is actually a num_c we already calculated
-                num_c = num_b;
-                num_b = complementMap[num_a][num_c];
-                // if the solution array is empty or the the previous doesn't match
-                if (
-                    !solutionArray.length ||
-                    solutionArray[solutionArray.length - 1][0] != num_a ||
-                    solutionArray[solutionArray.length - 1][1] != num_b ||
-                    solutionArray[solutionArray.length - 1][2] != num_c
-                ) {
-                    var possibleTriplet = [num_a, num_b, num_c];
-                    console.log(`\t\tpossibleTriplet: ${possibleTriplet}`);
-                    solutionArray.push(possibleTriplet);
-
-                    solutionMap[num_a][num_b] = num_c;
+            while (lo < hi) {
+                if (nums[lo] + nums[hi] == sum) {
+                    solutionArray.push([nums[i], nums[lo], nums[hi]]);
+                    while (lo < hi && nums[lo] == nums[lo + 1]) lo++; // avoid duplicate b
+                    while (lo < hi && nums[hi] == nums[hi - 1]) hi--; // avaoid duplicate c
+                    lo++;
+                    hi--; // just go to the next one
+                } else if (nums[lo] + nums[hi] < sum) {
+                    lo++; // sum is too small so pick a bigger num
+                } else {
+                    hi--; // sum is too high so pick a smaller num
                 }
-            } else {
-                // num_b can be saved until we come across num_c
-                num_c = -(num_a + num_b);
-                complementMap[num_a][num_c] = num_b;
             }
         }
     }
@@ -210,32 +134,32 @@ describe("sol-7_ThreeSums", function() {
                 ]);
             });
 
-            // it("should return two different sets", function() {
-            //     threeSum([
-            //         -4,
-            //         -2,
-            //         -2,
-            //         -2,
-            //         0,
-            //         1,
-            //         2,
-            //         2,
-            //         2,
-            //         3,
-            //         3,
-            //         4,
-            //         4,
-            //         6,
-            //         6
-            //     ]).should.eql([
-            //         [-4, -2, 6],
-            //         [-4, 0, 4],
-            //         [-4, 1, 3],
-            //         [-4, 2, 2],
-            //         [-2, -2, 4],
-            //         [-2, 0, 2]
-            //     ]);
-            // });
+            it("should return two different sets", function() {
+                threeSum([
+                    -4,
+                    -2,
+                    -2,
+                    -2,
+                    0,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3,
+                    3,
+                    4,
+                    4,
+                    6,
+                    6
+                ]).should.eql([
+                    [-4, -2, 6],
+                    [-4, 0, 4],
+                    [-4, 1, 3],
+                    [-4, 2, 2],
+                    [-2, -2, 4],
+                    [-2, 0, 2]
+                ]);
+            });
         });
     }); // end function
 }); // end solution
