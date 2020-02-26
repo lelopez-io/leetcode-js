@@ -24,12 +24,16 @@ function threeSumLoop(nums) {
 
     for (i = 0; i < elements - 2; i++) {
         num_a = nums[i];
-
+        //Check for repeating numbers
+        if (i > 0 && num_a == nums[i - 1]) continue;
         for (j = i + 1; j < elements - 1; j++) {
             num_b = nums[j];
 
+            if (j > 1 && num_b == nums[j - 1]) continue;
+
             for (k = j + 1; k < elements; k++) {
                 num_c = nums[k];
+                if (k > 2 && num_c == nums[k - 1]) continue;
 
                 // if triplet add to zero
                 if (!(num_a + num_b + num_c)) {
@@ -77,18 +81,16 @@ function threeSum(nums) {
     nums.sort(function(num_a, num_b) {
         return num_a - num_b;
     });
-    console.log(nums);
-
-    solutionMap = {};
-    complementMap = {};
+    if (nums[0] > 0) return []; // if no negatives exist then no need to process
 
     for (i = 0; i < nums.length - 2; i++) {
         num_a = nums[i];
-        complementMap[num_a] = {};
+        complementMap[num_a] = Object.assign({}, complementMap[num_a]);
+        solutionMap[num_a] = {};
 
         for (j = i + 1; j < nums.length; j++) {
             num_b = nums[j];
-            console.log(complementMap);
+            console.log("complementMap: ", complementMap);
 
             if (num_b in complementMap[num_a]) {
                 // num_b is actually a num_c we already calculated
@@ -104,6 +106,8 @@ function threeSum(nums) {
                     var possibleTriplet = [num_a, num_b, num_c];
                     console.log(`\t\tpossibleTriplet: ${possibleTriplet}`);
                     solutionArray.push(possibleTriplet);
+
+                    solutionMap[num_a][num_b] = num_c;
                 }
             } else {
                 // num_b can be saved until we come across num_c
